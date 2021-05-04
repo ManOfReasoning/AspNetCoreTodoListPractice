@@ -1,0 +1,43 @@
+@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+    <link rel = "stylesheet" href = "~/css/login.css" asp-append-version = "true">
+}
+
+<div class="login">
+    <p>@ViewData["Title"]</p>
+    <form id="account" method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class = "my-form-group">
+            <label asp-for="Input.Email" id = "0"></label>
+            <input class = "input" asp-for="Input.Email" />
+            <span asp-validation-for="Input.Email" class="text-danger"></span>
+        </div>
+        <div class = "my-form-group">
+            <label asp-for="Input.Password" id = "1"></label>
+            <input class = "input" asp-for="Input.Password" />
+            <span asp-validation-for="Input.Password" class="text-danger"></span>
+        </div>
+        <div class="my-form-group mb-0">
+            <div class="checkbox">
+                <label asp-for="Input.RememberMe">
+                    <input asp-for="Input.RememberMe" />
+                    @Html.DisplayNameFor(m => m.Input.RememberMe)
+                </label>
+            </div>
+        </div>
+        <button type="submit" class="btn mb-4 mt-2">Log in</button>
+        <div class="my-form-group">
+            <p>
+                <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+            </p>
+            <p>
+                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+            </p>
+        </div>
+    </form>
+</div>
+
+<script src = "~/js/form.js" ></script>

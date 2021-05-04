@@ -1,0 +1,135 @@
+﻿@page
+@model IndexModel
+
+@using Microsoft.AspNetCore.Identity;
+@using TodoListBreeze.Areas.Identity.Data;
+
+@inject SignInManager<UserData> _signInManager;
+
+@{
+    ViewData["Title"] = "Home page";
+    
+}
+@section Styles
+{
+    <link rel = "stylesheet" href = "~/css/index.css" asp-append-version = "true"/>
+}
+
+@if (!_signInManager.IsSignedIn(User))
+{
+    <div class = "index-bck pb-4 pt-2">
+        <div class = "container">
+            <div class = "row">
+                <div class = "col-md-6 index-bck-left-words pt-5">
+                    <h1>Increase your productivity</h1>
+                    <h1 class = "pb-4">By several folds</h1>
+                    <a 
+                        asp-area = "Identity" 
+                        asp-page = "/Account/Register"
+                        class = "index-bck-left-button"
+                        style = "text-decoration: none"
+                    >
+                        Sign up <span class="material-icons-outlined index-offer-icon">east</span>
+                    </a>
+                </div>
+                <div class = "col-md-6 index-bck-left-img">
+                    <img alt = "BackgroundImage" src = "~/images/network.png" class = "mt-2"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class = "index-offer container-fluid">
+        <h2 class = "pb-4">What does .breeze offer?</h2>
+        <div class = "row">
+            <div class = "col-md-4">
+                <span class=" material-icons-outlined index-offer-icon">assignment</span>
+                <p>Stay organized</p>
+                <span class = "index-offer-text">Sort out all your tasks efficiently</span>
+            </div>
+            <div class = "col-md-4">
+                <span class="material-icons-outlined index-offer-icon">paid</span>
+                <p>Free to use</p>
+                <span class = "index-offer-text">Would not cost a cent</span>
+            </div>
+            <div class = "col-md-4">
+                <span class="material-icons-outlined index-offer-icon">schedule</span>
+                <p>Save time</p>
+                <span class = "index-offer-text">Good schedule is a good start</span>
+            </div>
+        </div>
+    </div>
+    <div class = "index-group">
+        <div class = "container pt-5 pb-5">
+            <div class = "row">
+                <div class = "col-md-6 index-group-pic">
+                    <img alt = "GroupPic" src = "~/images/networking.png"/>
+                </div>
+                <div class = "index-group-words col-md-6 pt-5 pl-2">
+                    <h2>Support for groups</h2>
+                    <p>.breeze is perfect for</p>
+                    <p><i>group</i> and <i>private</i></p>
+                    <p>projects</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@* From here, starts the signed in version with post form, notes etc. *@
+
+else
+{
+    <div class = "signed-in-container">
+        <div class = "signed-in-header">
+            <p>Add a task</p>
+        </div>
+        <form method = "POST" class = "signed-in-form box-shadow" autocomplete = "off">
+            <div class = "signed-in-form-group">
+                <label asp-for = "NewNote.Name" id = "signed-in-0"></label>
+                <input asp-for = "NewNote.Name" class = "signed-in-input"/>
+                <span class = "text-danger" asp-validation-for = "NewNote.Name"></span>
+            </div>
+            <div class = "signed-in-form-group">
+                <label asp-for = "NewNote.Description" id = "signed-in-1"></label>
+                <textarea 
+                    class = "signed-in-input" 
+                    asp-for = "NewNote.Description" 
+                    cols = "30" 
+                    rows = "3"
+                ></textarea>
+                <span class = "text-danger" asp-validation-for = "NewNote.Description"></span>
+            </div>
+            <button type = "submit" class = "signed-in-button">
+                <span class="material-icons-outlined">
+                    add
+                </span>
+            </button>
+        </form>
+    </div>
+    if (@Model.Notes.Count > 0)
+    {
+        <div class = "row mr-0 ml-0">
+            @foreach (var item in @Model.Notes.Select((value, ind) => new {ind, value}))
+            {
+                <div class = "notes col-lg-2 col-md-3 col-sm-4">
+                    <h1>@item.value.Name</h1>
+                    <p>@item.value.Description</p>
+                    <form method = "POST" class = "notes-form">
+                        <input type = "hidden" value = "@item.ind" name = "id"/>
+                        <button type = "submit" asp-page-handler = "Delete">
+                            <span class="material-icons-outlined">
+                                delete
+                            </span>
+                        </button>
+                    </form>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class = "signed-in-nothing">There are no available tasks to display.</p>
+    }
+}
+
+<script src = "~/js/note.js"></script>
